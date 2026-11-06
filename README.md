@@ -40,4 +40,4 @@ python scripts/build_site.py
 
 ## Contact
 
-[LinkedIn](https://www.linkedin.com/in/janaya-hoskins) · [IAM & Identity Governance Portfolio](https://janaya-hoskins.github.io/iam-portfolio/)
+[LinkedIn](https://www.linkedin.com/in/janaya-hoskins) 
