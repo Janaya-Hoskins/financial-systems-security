@@ -1,0 +1,13 @@
+role_code,system,home_department
+BILL_SETUP,Billing (Oracle CC&B),Billing Operations
+ADJ_INIT,Billing (Oracle CC&B),Billing Operations
+ADJ_APPR,Billing (Oracle CC&B),Billing Supervision
+PAY_APPLY,ERP (SAP FI/CO),Accounts Receivable
+AR_WRITEOFF,ERP (SAP FI/CO),Credit & Collections
+GL_POST,ERP (SAP FI/CO),General Ledger
+GL_APPR,ERP (SAP FI/CO),Controllership
+AP_PAY,ERP (SAP FI/CO),Accounts Payable
+VENDOR_MAINT,ERP (SAP FI/CO),Procurement
+SYS_ADMIN,Billing (Oracle CC&B),IT Application Support
+SEC_ADMIN,ERP (SAP FI/CO),Information Security
+AUDIT_READ,ERP (SAP FI/CO),Internal Audit

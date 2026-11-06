@@ -1,0 +1,15 @@
+timestamp,source,event,detection_conditions
+2025-10-17 16:05:00,Role change,GRANT ADJ_APPR by helpdesk.tier2 (EA-0412): Emergency access: month-end backlog,"Emergency grant, no expiry"
+2025-10-18 23:09:41,VPN,LOGIN SUCCESS from WS-UNREG-77,Unregistered host
+2025-10-18 23:12:02,Billing (Oracle CC&B),LOGIN FAILURE from WS-UNREG-77,Unregistered host; Failed login
+2025-10-18 23:12:40,Billing (Oracle CC&B),LOGIN FAILURE from WS-UNREG-77,Unregistered host; Failed login
+2025-10-18 23:14:05,Billing (Oracle CC&B),LOGIN SUCCESS from WS-UNREG-77,Unregistered host
+2025-10-18 23:20:00,Billing adjustment,"ADJ-25-02405 $9,800.00 to CA-482211 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:25:00,Billing adjustment,"ADJ-25-02406 $7,450.00 to CA-482219 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:30:00,Billing adjustment,"ADJ-25-02407 $9,900.00 to CA-517730 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:35:00,Billing adjustment,"ADJ-25-02408 $6,200.00 to CA-482211 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:40:00,Billing adjustment,"ADJ-25-02409 $8,150.00 to CA-482219 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:45:00,Billing adjustment,"ADJ-25-02410 $6,800.00 to CA-517730 (GOODWILL)",Self-approved; Off-hours; Within 72h of role grant
+2025-10-18 23:52:30,Billing (Oracle CC&B),LOGOUT SUCCESS from WS-UNREG-77,Unregistered host
+2025-10-19 07:30:00,SIEM,ALERT FIN-ADJ-07 TRIGGERED from siem-01,
+2025-10-19 08:15:00,Role change,REVOKE ADJ_APPR by iam.ops (INC-77031): Revoked during incident response,

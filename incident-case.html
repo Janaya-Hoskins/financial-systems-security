@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incident Case File | Janaya Hoskins, Financial Systems Security</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="index.html">Janaya Hoskins · Financial Systems Security</a><nav><a href="index.html">Overview</a><a href="sox-itgc-workpaper.html">SOX ITGC Workpaper</a><a href="sod-matrix.html">SoD Matrix</a><a href="access-reconciliation.html">Access Reconciliation</a><a href="incident-case.html" class=on>Incident Case File</a><a href="change-security-review.html">Change Security Review</a><a href="risk-control-matrix.html">Risk &amp; Control Matrix</a></nav></div></header>
+<main><div class="wrap">
+
+<h1>Incident Case File INC-77031: Self-Approved Billing Adjustments</h1>
+<p class="lede">A detection rule flagged off-hours billing credits approved by the same user who entered them. The investigation traced the
+activity to an emergency role grant with no expiry, contained it the next morning and fixed the control that allowed it.</p>
+<div class="meta">
+<div><b>Severity</b><span>High (financial impact, SoD bypass)</span></div>
+<div><b>Detected</b><span>Oct 19, 2025 07:30 by SIEM rule FIN-ADJ-07</span></div>
+<div><b>Contained</b><span>Oct 19, 2025 08:15 (45 minutes)</span></div>
+<div><b>Impact</b><span>6 credits, $48,300.00, 3 customer accounts</span></div>
+</div>
+<h2>1 · Detection</h2>
+<p>FIN-ADJ-07 fires when an adjustment is self-approved, outside 07:00–19:00 or on a weekend, within 72 hours of the approver receiving the approval role.
+All three conditions were true for every adjustment in this case. The SQL and Splunk versions of the rule are in
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/sql/financial_controls_tests.sql">sql/financial_controls_tests.sql</a>.</p>
+<h2>2 · Timeline</h2>
+<p>Built by <code>scripts/incident_timeline.py</code>, which merges role changes, authentication events and adjustments for <code>c.oakes</code> and tags each event with the conditions it meets.</p>
+<div class="scroll"><table class="timeline"><thead><tr><th>Timestamp</th><th>Source</th><th>Event</th><th>Conditions</th></tr></thead><tbody><tr><td>2025-10-17 16:05:00</td><td>Role change</td><td>GRANT ADJ_APPR by helpdesk.tier2 (EA-0412): Emergency access: month-end backlog</td><td>Emergency grant, no expiry</td></tr><tr><td>2025-10-18 23:09:41</td><td>VPN</td><td>LOGIN SUCCESS from WS-UNREG-77</td><td>Unregistered host</td></tr><tr><td>2025-10-18 23:12:02</td><td>Billing (Oracle CC&amp;B)</td><td>LOGIN FAILURE from WS-UNREG-77</td><td>Unregistered host; Failed login</td></tr><tr><td>2025-10-18 23:12:40</td><td>Billing (Oracle CC&amp;B)</td><td>LOGIN FAILURE from WS-UNREG-77</td><td>Unregistered host; Failed login</td></tr><tr><td>2025-10-18 23:14:05</td><td>Billing (Oracle CC&amp;B)</td><td>LOGIN SUCCESS from WS-UNREG-77</td><td>Unregistered host</td></tr><tr><td>2025-10-18 23:20:00</td><td>Billing adjustment</td><td>ADJ-25-02405 $9,800.00 to CA-482211 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:25:00</td><td>Billing adjustment</td><td>ADJ-25-02406 $7,450.00 to CA-482219 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:30:00</td><td>Billing adjustment</td><td>ADJ-25-02407 $9,900.00 to CA-517730 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:35:00</td><td>Billing adjustment</td><td>ADJ-25-02408 $6,200.00 to CA-482211 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:40:00</td><td>Billing adjustment</td><td>ADJ-25-02409 $8,150.00 to CA-482219 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:45:00</td><td>Billing adjustment</td><td>ADJ-25-02410 $6,800.00 to CA-517730 (GOODWILL)</td><td>Self-approved; Off-hours; Within 72h of role grant</td></tr><tr><td>2025-10-18 23:52:30</td><td>Billing (Oracle CC&amp;B)</td><td>LOGOUT SUCCESS from WS-UNREG-77</td><td>Unregistered host</td></tr><tr><td>2025-10-19 07:30:00</td><td>SIEM</td><td>ALERT FIN-ADJ-07 TRIGGERED from siem-01</td><td></td></tr><tr><td>2025-10-19 08:15:00</td><td>Role change</td><td>REVOKE ADJ_APPR by iam.ops (INC-77031): Revoked during incident response</td><td></td></tr></tbody></table></div>
+<h2>3 · Analysis</h2>
+<div class="scroll"><table class=""><thead><tr><th>Question</th><th>Finding</th><th>Evidence</th></tr></thead><tbody><tr><td>Was the activity authorized?</td><td>No. The approval right came from an emergency request for month-end backlog, not for goodwill credits, and the user approved their own entries.</td><td>Role change log EA-0412; adjustment log</td></tr><tr><td>How was SoD bypassed?</td><td>The emergency grant added approval rights to an account that already had initiation rights. No SoD check runs on emergency grants, and the application doesn't block self-approval.</td><td>Role assignments; workflow configuration</td></tr><tr><td>Was the session suspicious?</td><td>Yes. VPN and application logins came from a host not in the asset inventory, after two failed application logins.</td><td>Auth events; asset inventory</td></tr><tr><td>What was the pattern?</td><td>6 credits, each under $10,000, alternating across 3 customer accounts in 25 minutes, all coded GOODWILL.</td><td>Adjustment log</td></tr></tbody></table></div>
+<p><b>Root cause:</b> emergency access was granted without an expiry or SoD check, and the billing application allowed initiator and approver to be the same account.
+Whether the activity was misuse of the employee's own access or of a compromised credential was referred to the investigations team; that determination is outside this case file.</p>
+<h2>4 · Containment and recovery</h2>
+<ol class="steps">
+<li>08:15 · approval role revoked and user sessions terminated (INC-77031).</li>
+<li>Credential reset and VPN access suspended pending investigation; unregistered host blocked at the VPN gateway.</li>
+<li>Finance placed holds on the 3 customer accounts and reversed the credits after review.</li>
+<li>Escalated to the Information Security lead, the Controller and Internal Audit with this case file attached.</li>
+</ol>
+<h2>5 · Control improvements</h2>
+<div class="scroll"><table class=""><thead><tr><th>Gap</th><th>Fix</th><th>RCM ref</th></tr></thead><tbody><tr><td>Emergency access had no expiry</td><td>Emergency grants expire automatically after 24 hours; each use is reviewed the next business day</td><td>APD-06</td></tr><tr><td>No SoD check on emergency grants</td><td>Run the SoD rule set on every grant, including emergency requests</td><td>APD-07</td></tr><tr><td>Application allowed self-approval</td><td>System-enforced initiator ≠ approver, keyed to the HR employee ID</td><td>APD-07</td></tr><tr><td>Unregistered devices reached financial apps</td><td>Device posture check on VPN for finance application access</td><td>APD-05</td></tr><tr><td>Detection depended on one rule</td><td>Keep FIN-ADJ-07 and add a threshold-structuring rule (repeated credits just under approval limits)</td><td>CO-02</td></tr></tbody></table></div>
+
+</div></main>
+<footer class="site"><div class="wrap">
+Northwind Holdings is a fictional company. Every person, account and transaction on this site is synthetic data generated by
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/generate_synthetic_data.py">scripts/generate_synthetic_data.py</a>. Nothing here is a record of any
+employer's systems, people or findings. · <a href="https://www.linkedin.com/in/janaya-hoskins">LinkedIn</a> · <a href="https://janaya-hoskins.github.io/iam-portfolio/">IAM &amp; Identity Governance Portfolio</a> · <a href="https://github.com/Janaya-Hoskins/financial-systems-security">Source on GitHub</a>
+</div></footer>
+</body>
+</html>

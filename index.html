@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview | Janaya Hoskins, Financial Systems Security</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="index.html">Janaya Hoskins · Financial Systems Security</a><nav><a href="index.html" class=on>Overview</a><a href="sox-itgc-workpaper.html">SOX ITGC Workpaper</a><a href="sod-matrix.html">SoD Matrix</a><a href="access-reconciliation.html">Access Reconciliation</a><a href="incident-case.html">Incident Case File</a><a href="change-security-review.html">Change Security Review</a><a href="risk-control-matrix.html">Risk &amp; Control Matrix</a></nav></div></header>
+<main><div class="wrap">
+
+<h1>Financial Systems Security Work Samples</h1>
+<p class="lede">Worked examples of financial systems security: ITGC/SOX testing, segregation of duties, access reconciliation,
+security monitoring and change security review. The methods come from my work supporting SOX-aligned access and SoD controls on
+Oracle CC&amp;B and SAP FI/CO at Exelon, federal security operations at the Social Security Administration, IAM investigations at
+AWS and access governance at CVS Health. The company, people and data are fictional, so every result can be published and rerun.</p>
+<div class="stats">
+<div class="stat"><div class="n">133</div><div class="l">billing and ERP accounts reconciled</div></div>
+<div class="stat"><div class="n">2,410</div><div class="l">billing adjustments tested ($2,780,719.96)</div></div>
+<div class="stat"><div class="n">9</div><div class="l">SoD conflict rules applied</div></div>
+<div class="stat"><div class="n">14</div><div class="l">ITGCs in the risk &amp; control matrix</div></div>
+</div>
+<h2>Work samples</h2>
+<div class="cards"><div class="card"><h3><a href="sox-itgc-workpaper.html">SOX ITGC Control Testing Workpaper</a></h3><p>Full-population tests of three IT general controls over billing and ERP: user access lifecycle, segregation of duties on 2,410 billing adjustments, and privileged and emergency access. Design and operating effectiveness, exceptions and remediation.</p><div class="duty"><b>Shows:</b> ITGC/SOX support · audit evidence · walkthrough support</div></div><div class="card"><h3><a href="sod-matrix.html">Segregation of Duties Matrix for Financial Roles</a></h3><p>Conflict rules across billing, receivables, general ledger and payables roles, with the conflicts found when the rules are run against every person&#x27;s access across all of their accounts.</p><div class="duty"><b>Shows:</b> Access management · SoD for financial systems</div></div><div class="card"><h3><a href="access-reconciliation.html">Financial Application Access Reconciliation</a></h3><p>Python reconciliation of 133 billing and ERP accounts against the HR roster and role catalog: terminated users, stale transfers, orphaned and second privileged accounts, and emergency grants.</p><div class="duty"><b>Shows:</b> Security risk assessment · control gap identification</div></div><div class="card"><h3><a href="incident-case.html">Incident Case File: Self-Approved Billing Adjustments</a></h3><p>From SIEM alert to root cause: 6 off-hours, self-approved adjustments ($48,300.00) traced to an emergency role grant with no expiry. Timeline, detection logic, containment and control fixes.</p><div class="duty"><b>Shows:</b> Security monitoring · investigation · root cause · escalation</div></div><div class="card"><h3><a href="change-security-review.html">Security Impact Review: Billing Platform Upgrade</a></h3><p>Security review of a major billing-system upgrade: role mapping, SoD re-test, cutover privileged access, audit-log continuity, interface credentials and data conversion reconciliation, with go-live conditions.</p><div class="duty"><b>Shows:</b> Security SME on implementations · change request review</div></div><div class="card"><h3><a href="risk-control-matrix.html">ITGC Risk &amp; Control Matrix</a></h3><p>Fourteen access, change and operations controls for financial applications, each mapped to the risk it addresses, its evidence and test procedure, SOX/COSO and NIST SP 800-53.</p><div class="duty"><b>Shows:</b> Control design · audit efficiency · security standards</div></div></div>
+<h2>Reproduce the results</h2>
+<p>Everything on this site is generated from the scripts in the repository, using only the Python standard library.</p>
+<pre><code>git clone https://github.com/Janaya-Hoskins/financial-systems-security.git
+cd financial-systems-security
+python scripts/generate_synthetic_data.py   # writes /data
+python scripts/reconcile_access.py          # writes output/access_exceptions.csv
+python scripts/sod_check.py                 # writes output/sod_*.csv
+python scripts/incident_timeline.py         # writes output/incident_timeline.csv
+python scripts/build_site.py                # rebuilds these pages</code></pre>
+<p>The same tests are written in SQL in <a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/sql/financial_controls_tests.sql">sql/financial_controls_tests.sql</a>,
+with a Splunk SPL version of the detection rule.</p>
+
+</div></main>
+<footer class="site"><div class="wrap">
+Northwind Holdings is a fictional company. Every person, account and transaction on this site is synthetic data generated by
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/generate_synthetic_data.py">scripts/generate_synthetic_data.py</a>. Nothing here is a record of any
+employer's systems, people or findings. · <a href="https://www.linkedin.com/in/janaya-hoskins">LinkedIn</a> · <a href="https://janaya-hoskins.github.io/iam-portfolio/">IAM &amp; Identity Governance Portfolio</a> · <a href="https://github.com/Janaya-Hoskins/financial-systems-security">Source on GitHub</a>
+</div></footer>
+</body>
+</html>

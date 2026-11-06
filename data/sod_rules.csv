@@ -1,0 +1,10 @@
+role_a,role_b,rating,risk
+ADJ_INIT,ADJ_APPR,Prohibited,Initiate and approve the same billing adjustment
+GL_POST,GL_APPR,Prohibited,Post and approve the same journal entry
+VENDOR_MAINT,AP_PAY,Prohibited,Create a vendor and release payment to it
+SYS_ADMIN,ADJ_APPR,Prohibited,Administer the billing system and approve adjustments in it
+SEC_ADMIN,GL_APPR,Prohibited,Grant access and approve journal entries
+AUDIT_READ,GL_POST,Prohibited,Post entries and review them as auditor
+PAY_APPLY,AR_WRITEOFF,Mitigating control,Apply payments and write off the remaining balance
+BILL_SETUP,ADJ_APPR,Mitigating control,Set up billing terms and approve adjustments against them
+PAY_APPLY,GL_POST,Mitigating control,Apply cash and post the related journal

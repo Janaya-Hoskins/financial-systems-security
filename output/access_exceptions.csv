@@ -1,0 +1,11 @@
+exception_type,severity,user_id,owner,department,account_type,roles,detail
+EMERGENCY_NO_EXPIRY,High,c.oakes,Cruz Oakes,Billing Operations,Standard,ADJ_APPR,Emergency grant EA-0412 on 2025-10-17 by helpdesk.tier2 with no expiry
+ORPHANED,High,p.contractor7,(none),,Standard,PAY_APPLY,No matching HR record; no service-account documentation
+ORPHANED,High,temp.glsupport,(none),,Standard,GL_POST,No matching HR record; no service-account documentation
+SECOND_PRIVILEGED,High,m.thorne_adm,Morgan Thorne,Billing Operations,Privileged,ADJ_APPR,Owner holds a standard and a privileged account; privileged account was created without an approval ticket
+STALE_TRANSFER,High,s.kingsley,Sage Kingsley,General Ledger,Standard,PAY_APPLY,Transferred from Accounts Receivable on 2025-06-12; prior-role access not removed
+STALE_TRANSFER,High,u.garnett,Umi Garnett,Billing Supervision,Standard,BILL_SETUP;ADJ_INIT,Transferred from Billing Operations on 2025-08-23; prior-role access not removed
+TERMINATED_ACTIVE,High,b.vance,Bryn Vance,Billing Operations,Standard,BILL_SETUP;ADJ_INIT,Owner terminated 2025-10-07; account active 85 days later
+TERMINATED_ACTIVE,High,l.radcliffe,Logan Radcliffe,Billing Operations,Standard,BILL_SETUP;ADJ_INIT,Owner terminated 2025-09-24; account active 98 days later
+TERMINATED_ACTIVE,High,s.calloway,Sage Calloway,Accounts Payable,Standard,AP_PAY,Owner terminated 2025-10-19; account active 73 days later
+SERVICE_ACCOUNT,Info,svc_billing_batch,(none),,Service,BILL_SETUP,Non-human account; confirm owner attestation and interactive-login restriction

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Access Reconciliation | Janaya Hoskins, Financial Systems Security</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="index.html">Janaya Hoskins · Financial Systems Security</a><nav><a href="index.html">Overview</a><a href="sox-itgc-workpaper.html">SOX ITGC Workpaper</a><a href="sod-matrix.html">SoD Matrix</a><a href="access-reconciliation.html" class=on>Access Reconciliation</a><a href="incident-case.html">Incident Case File</a><a href="change-security-review.html">Change Security Review</a><a href="risk-control-matrix.html">Risk &amp; Control Matrix</a></nav></div></header>
+<main><div class="wrap">
+
+<h1>Financial Application Access Reconciliation</h1>
+<p class="lede">Every billing and ERP account is matched to the HR system of record and the role catalog, and each mismatch is classified by type,
+because the type decides who fixes it and how much audit exposure it creates.</p>
+<div class="stats">
+<div class="stat"><div class="n">129</div><div class="l">HR records (system of record)</div></div>
+<div class="stat"><div class="n">133</div><div class="l">application accounts</div></div>
+<div class="stat"><div class="n">174</div><div class="l">role grants</div></div>
+<div class="stat"><div class="n">10</div><div class="l">exceptions classified</div></div>
+</div>
+<h2>Method</h2>
+<ol class="steps">
+<li><b>Completeness first.</b> Confirm each extract's record count against the application before testing; a partial extract makes every later result unreliable.</li>
+<li><b>Match to the system of record.</b> Join accounts to HR by employee ID; anything that doesn't match is either a documented service account or an orphan.</li>
+<li><b>Compare life events with access.</b> Termination and transfer dates are compared with account status and with each role's home department.</li>
+<li><b>Classify and assign.</b> Each exception gets a type, a severity and an owner, then is traced by hand to the source record before it is reported.</li>
+</ol>
+<h2>Results by exception type</h2>
+<div class="scroll"><table class=""><thead><tr><th>Type</th><th>Definition</th><th>Count</th></tr></thead><tbody><tr><td>Terminated Active</td><td>Account active after the owner&#x27;s termination date</td><td>3</td></tr><tr><td>Stale Transfer</td><td>Prior-department role still assigned after a transfer</td><td>2</td></tr><tr><td>Orphaned</td><td>No HR owner and no service-account documentation</td><td>2</td></tr><tr><td>Second Privileged</td><td>Person holds an additional privileged account</td><td>1</td></tr><tr><td>Emergency No Expiry</td><td>Emergency grant with no recorded expiry</td><td>1</td></tr><tr><td>Service Account</td><td>Non-human account, sent for owner attestation</td><td>1</td></tr></tbody></table></div>
+<h2>Exception register</h2>
+<div class="scroll"><table class=""><thead><tr><th>Severity</th><th>Type</th><th>Account</th><th>Owner</th><th>Roles</th><th>Detail</th></tr></thead><tbody><tr><td><span class="pill high">High</span></td><td>Emergency No Expiry</td><td>c.oakes</td><td>Cruz Oakes</td><td>ADJ_APPR</td><td>Emergency grant EA-0412 on 2025-10-17 by helpdesk.tier2 with no expiry</td></tr><tr><td><span class="pill high">High</span></td><td>Orphaned</td><td>p.contractor7</td><td>(none)</td><td>PAY_APPLY</td><td>No matching HR record; no service-account documentation</td></tr><tr><td><span class="pill high">High</span></td><td>Orphaned</td><td>temp.glsupport</td><td>(none)</td><td>GL_POST</td><td>No matching HR record; no service-account documentation</td></tr><tr><td><span class="pill high">High</span></td><td>Second Privileged</td><td>m.thorne_adm</td><td>Morgan Thorne</td><td>ADJ_APPR</td><td>Owner holds a standard and a privileged account; privileged account was created without an approval ticket</td></tr><tr><td><span class="pill high">High</span></td><td>Stale Transfer</td><td>s.kingsley</td><td>Sage Kingsley</td><td>PAY_APPLY</td><td>Transferred from Accounts Receivable on 2025-06-12; prior-role access not removed</td></tr><tr><td><span class="pill high">High</span></td><td>Stale Transfer</td><td>u.garnett</td><td>Umi Garnett</td><td>BILL_SETUP;ADJ_INIT</td><td>Transferred from Billing Operations on 2025-08-23; prior-role access not removed</td></tr><tr><td><span class="pill high">High</span></td><td>Terminated Active</td><td>b.vance</td><td>Bryn Vance</td><td>BILL_SETUP;ADJ_INIT</td><td>Owner terminated 2025-10-07; account active 85 days later</td></tr><tr><td><span class="pill high">High</span></td><td>Terminated Active</td><td>l.radcliffe</td><td>Logan Radcliffe</td><td>BILL_SETUP;ADJ_INIT</td><td>Owner terminated 2025-09-24; account active 98 days later</td></tr><tr><td><span class="pill high">High</span></td><td>Terminated Active</td><td>s.calloway</td><td>Sage Calloway</td><td>AP_PAY</td><td>Owner terminated 2025-10-19; account active 73 days later</td></tr><tr><td><span class="pill info">Info</span></td><td>Service Account</td><td>svc_billing_batch</td><td>(none)</td><td>BILL_SETUP</td><td>Non-human account; confirm owner attestation and interactive-login restriction</td></tr></tbody></table></div>
+<h2>Script</h2>
+<p>Source: <a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/reconcile_access.py">scripts/reconcile_access.py</a> (Python standard library only).
+Output: <a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/output/access_exceptions.csv">output/access_exceptions.csv</a>.</p>
+<pre><code>python scripts/reconcile_access.py
+Accounts reviewed: 133 | role grants: 174 | exceptions: 10</code></pre>
+
+</div></main>
+<footer class="site"><div class="wrap">
+Northwind Holdings is a fictional company. Every person, account and transaction on this site is synthetic data generated by
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/generate_synthetic_data.py">scripts/generate_synthetic_data.py</a>. Nothing here is a record of any
+employer's systems, people or findings. · <a href="https://www.linkedin.com/in/janaya-hoskins">LinkedIn</a> · <a href="https://janaya-hoskins.github.io/iam-portfolio/">IAM &amp; Identity Governance Portfolio</a> · <a href="https://github.com/Janaya-Hoskins/financial-systems-security">Source on GitHub</a>
+</div></footer>
+</body>
+</html>

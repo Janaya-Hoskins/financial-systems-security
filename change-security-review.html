@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Change Security Review | Janaya Hoskins, Financial Systems Security</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="index.html">Janaya Hoskins · Financial Systems Security</a><nav><a href="index.html">Overview</a><a href="sox-itgc-workpaper.html">SOX ITGC Workpaper</a><a href="sod-matrix.html">SoD Matrix</a><a href="access-reconciliation.html">Access Reconciliation</a><a href="incident-case.html">Incident Case File</a><a href="change-security-review.html" class=on>Change Security Review</a><a href="risk-control-matrix.html">Risk &amp; Control Matrix</a></nav></div></header>
+<main><div class="wrap">
+
+<h1>Security Impact Review: Billing Platform Upgrade</h1>
+<p class="lede">Security review of a major version upgrade of Northwind Holdings' billing platform, done with the application, infrastructure and
+PMO teams before the change advisory board decision. The method follows what an ERP or billing upgrade has to prove before go-live: access is unchanged,
+SoD still holds, the audit trail is continuous and the converted data reconciles.</p>
+<div class="meta">
+<div><b>Change</b><span>CHG-2025-0931 (fictional)</span></div>
+<div><b>System</b><span>Billing (Oracle CC&amp;B) major version upgrade</span></div>
+<div><b>Classification</b><span>SOX-relevant · high risk</span></div>
+<div><b>Recommendation</b><span>Approve with conditions</span></div>
+</div>
+<h2>Scope of security review</h2>
+<ul>
+<li>Application roles and permissions after the upgrade, and the SoD rules that depend on them</li>
+<li>Temporary privileged access for the cutover team</li>
+<li>Audit logging, log forwarding to the SIEM and the FIN-ADJ-07 detection rule</li>
+<li>Interface service accounts to the ERP general ledger</li>
+<li>Data conversion of customer balances, unbilled usage and adjustment history</li>
+<li>Approval workflow thresholds for billing adjustments</li>
+</ul>
+<h2>Risk assessment</h2>
+<div class="scroll"><table><thead><tr><th>#</th><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Required control</th><th>Evidence before go-live</th></tr></thead><tbody>
+<tr><td>1</td><td>Permission mapping changes in the new version grant or remove rights silently</td><td>Medium</td><td>High</td><td>Compare role-to-permission mappings before and after upgrade; re-run SoD rule set on post-upgrade roles</td><td>Role diff report with every change approved by the role owner; <code>sod_check.py</code> output with no new prohibited conflicts</td></tr>
+<tr><td>2</td><td>Cutover privileged accounts stay active after go-live</td><td>High</td><td>High</td><td>Named cutover accounts only, expiry set at end of hypercare, sessions recorded</td><td>Account list with expiry dates; confirmation of disablement at hypercare exit</td></tr>
+<tr><td>3</td><td>Audit trail gap during or after cutover</td><td>Medium</td><td>High</td><td>Logging enabled from first transaction; SIEM parser updated; detection rule tested against synthetic events</td><td>Test event visible in SIEM; FIN-ADJ-07 fires on a staged self-approval</td></tr>
+<tr><td>4</td><td>Interface credentials reused or exposed during configuration</td><td>Medium</td><td>Medium</td><td>Rotate interface service-account credentials at cutover; store in the vault; confirm non-interactive</td><td>Rotation record; vault entry; failed interactive-login test</td></tr>
+<tr><td>5</td><td>Converted balances do not match the legacy system</td><td>Medium</td><td>High</td><td>Reconcile record counts and control totals (open AR, unbilled usage, adjustment history) legacy vs. target; pre- and post-migration trial balance</td><td>Signed reconciliation with variances explained; trial balance comparison</td></tr>
+<tr><td>6</td><td>Adjustment approval thresholds or dual approval not carried over</td><td>Medium</td><td>High</td><td>Configure thresholds identically; add a test case that tries to self-approve</td><td>UAT result showing the self-approval attempt is blocked</td></tr>
+<tr><td>7</td><td>Failed cutover with no clean rollback</td><td>Low</td><td>High</td><td>Tested restore point and documented go/no-go criteria</td><td>Restore test result; signed go/no-go checklist</td></tr>
+</tbody></table></div>
+<h2>Conditions for approval</h2>
+<ol class="steps">
+<li>Risks 1, 3, 5 and 6 have evidence on file before the change advisory board meets.</li>
+<li>Cutover privileged accounts (risk 2) have expiry dates set before they are created.</li>
+<li>Information Security reviews logging and the detection rule on the first business day after go-live.</li>
+<li>Internal Audit receives the evidence index, so SOX change-management testing can use it without a separate request.</li>
+</ol>
+<h2>Sign-off</h2>
+<div class="scroll"><table><thead><tr><th>Role</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td>Billing application owner</td><td>Role mapping approval; conversion reconciliation sign-off</td></tr>
+<tr><td>Information Security (security reviewer)</td><td>This review; logging, privileged access and detection validation</td></tr>
+<tr><td>Controller</td><td>Financial reconciliation and trial balance sign-off</td></tr>
+<tr><td>IT change manager / PMO</td><td>Go/no-go, schedule and rollback readiness</td></tr>
+<tr><td>Internal Audit (informed)</td><td>Receives the evidence index for SOX testing</td></tr>
+</tbody></table></div>
+
+</div></main>
+<footer class="site"><div class="wrap">
+Northwind Holdings is a fictional company. Every person, account and transaction on this site is synthetic data generated by
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/generate_synthetic_data.py">scripts/generate_synthetic_data.py</a>. Nothing here is a record of any
+employer's systems, people or findings. · <a href="https://www.linkedin.com/in/janaya-hoskins">LinkedIn</a> · <a href="https://janaya-hoskins.github.io/iam-portfolio/">IAM &amp; Identity Governance Portfolio</a> · <a href="https://github.com/Janaya-Hoskins/financial-systems-security">Source on GitHub</a>
+</div></footer>
+</body>
+</html>

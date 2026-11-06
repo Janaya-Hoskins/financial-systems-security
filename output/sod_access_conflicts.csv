@@ -1,0 +1,12 @@
+person,department,accounts,role_a,role_b,rating,risk
+Cruz Oakes,Billing Operations,c.oakes,ADJ_INIT,ADJ_APPR,Prohibited,Initiate and approve the same billing adjustment
+Morgan Quill,IT Application Support,m.quill,SYS_ADMIN,ADJ_APPR,Prohibited,Administer the billing system and approve adjustments in it
+Morgan Thorne,Billing Operations,m.thorne;m.thorne_adm,ADJ_INIT,ADJ_APPR,Prohibited,Initiate and approve the same billing adjustment
+Umi Garnett,Billing Supervision,u.garnett,ADJ_INIT,ADJ_APPR,Prohibited,Initiate and approve the same billing adjustment
+Wren Whitlock,General Ledger,w.whitlock,GL_POST,GL_APPR,Prohibited,Post and approve the same journal entry
+Xen Pembrook,Procurement,x.pembrook,VENDOR_MAINT,AP_PAY,Prohibited,Create a vendor and release payment to it
+Cruz Oakes,Billing Operations,c.oakes,BILL_SETUP,ADJ_APPR,Mitigating control,Set up billing terms and approve adjustments against them
+Morgan Thorne,Billing Operations,m.thorne;m.thorne_adm,BILL_SETUP,ADJ_APPR,Mitigating control,Set up billing terms and approve adjustments against them
+Sage Kingsley,General Ledger,s.kingsley,PAY_APPLY,GL_POST,Mitigating control,Apply cash and post the related journal
+Umi Garnett,Billing Supervision,u.garnett,BILL_SETUP,ADJ_APPR,Mitigating control,Set up billing terms and approve adjustments against them
+Yael Lockhart,Accounts Receivable,y.lockhart,PAY_APPLY,AR_WRITEOFF,Mitigating control,Apply payments and write off the remaining balance

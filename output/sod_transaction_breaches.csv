@@ -1,0 +1,11 @@
+txn_id,initiated_ts,approved_ts,amount,initiator_user_id,approver_user_id,customer_account,reason_code,breach_type
+ADJ-25-02401,2025-09-01 14:05:00,2025-09-01 22:05:00,23450.00,u.garnett,u.garnett,CA-747043,CANCEL_REBILL,Same account
+ADJ-25-02404,2025-09-03 10:44:00,2025-09-03 19:01:00,11200.00,m.thorne,m.thorne_adm,CA-232417,RATE_CORRECTION,"Same person, second account"
+ADJ-25-02402,2025-09-29 14:05:00,2025-09-29 23:27:00,4120.50,u.garnett,u.garnett,CA-642179,CANCEL_REBILL,Same account
+ADJ-25-02405,2025-10-18 23:20:00,2025-10-18 23:21:00,9800.00,c.oakes,c.oakes,CA-482211,GOODWILL,Same account
+ADJ-25-02406,2025-10-18 23:25:00,2025-10-18 23:26:00,7450.00,c.oakes,c.oakes,CA-482219,GOODWILL,Same account
+ADJ-25-02407,2025-10-18 23:30:00,2025-10-18 23:31:00,9900.00,c.oakes,c.oakes,CA-517730,GOODWILL,Same account
+ADJ-25-02408,2025-10-18 23:35:00,2025-10-18 23:36:00,6200.00,c.oakes,c.oakes,CA-482211,GOODWILL,Same account
+ADJ-25-02409,2025-10-18 23:40:00,2025-10-18 23:41:00,8150.00,c.oakes,c.oakes,CA-482219,GOODWILL,Same account
+ADJ-25-02410,2025-10-18 23:45:00,2025-10-18 23:46:00,6800.00,c.oakes,c.oakes,CA-517730,GOODWILL,Same account
+ADJ-25-02403,2025-11-02 14:05:00,2025-11-02 19:34:00,980.00,u.garnett,u.garnett,CA-820385,CANCEL_REBILL,Same account

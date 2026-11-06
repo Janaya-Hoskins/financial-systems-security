@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOX ITGC Workpaper | Janaya Hoskins, Financial Systems Security</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="index.html">Janaya Hoskins · Financial Systems Security</a><nav><a href="index.html">Overview</a><a href="sox-itgc-workpaper.html" class=on>SOX ITGC Workpaper</a><a href="sod-matrix.html">SoD Matrix</a><a href="access-reconciliation.html">Access Reconciliation</a><a href="incident-case.html">Incident Case File</a><a href="change-security-review.html">Change Security Review</a><a href="risk-control-matrix.html">Risk &amp; Control Matrix</a></nav></div></header>
+<main><div class="wrap">
+
+<h1>SOX ITGC Control Testing Workpaper</h1>
+<p class="lede">Annual testing of three IT general controls over Northwind Holdings' billing system (Oracle CC&amp;B) and ERP (SAP FI/CO).
+Each test runs against the full population with scripts, and every exception is then traced by hand to its source record.</p>
+<div class="meta">
+<div><b>Entity</b><span>Northwind Holdings (fictional)</span></div>
+<div><b>Period</b><span>FY2025, as of Dec 31, 2025</span></div>
+<div><b>Systems</b><span>Billing (Oracle CC&amp;B) · ERP (SAP FI/CO)</span></div>
+<div><b>Workpaper</b><span>NWH-ITGC-WP-FY2025</span></div>
+</div>
+<h2>Summary</h2>
+<div class="scroll"><table class=""><thead><tr><th>Test</th><th>Control (RCM ref)</th><th>Population</th><th>Exceptions</th><th>Design</th><th>Operating</th><th>Proposed rating</th></tr></thead><tbody><tr><td>T1</td><td>User access lifecycle: termination and transfer removal (APD-02, APD-03)</td><td>132 human accounts</td><td>5</td><td><span class="pill eff">Effective</span></td><td><span class="pill ne">Not effective</span></td><td>Deficiency</td></tr><tr><td>T2</td><td>SoD on billing adjustments (APD-07)</td><td>2,410 adjustments, $2,780,719.96</td><td>10 ($88,050.50)</td><td><span class="pill ne">Not effective</span></td><td><span class="pill ne">Not effective</span></td><td>Significant deficiency</td></tr><tr><td>T3</td><td>Privileged, emergency and non-employee access (APD-05, APD-06, APD-08)</td><td>13 privileged accounts · emergency grants · non-HR accounts</td><td>4</td><td><span class="pill pe">Partially effective</span></td><td><span class="pill ne">Not effective</span></td><td>Deficiency</td></tr></tbody></table></div>
+<div class="note">Ratings are proposed for management and audit review. Final deficiency classification belongs to management and the external auditor.</div>
+
+<h2>T1 · User access lifecycle (APD-02, APD-03)</h2>
+<p><b>Objective:</b> access to billing and ERP is removed within 1 business day of termination and prior-department roles are removed within 5 business days of a transfer.<br>
+<b>Risk:</b> former employees or transferred staff keep the ability to create, adjust or post financial transactions.</p>
+<h3>Procedure</h3>
+<ol class="steps">
+<li>Obtain the HR roster (system of record) and the account and role extracts for both applications as of Dec 31, 2025; confirm extract completeness against application record counts.</li>
+<li>Run <code>scripts/reconcile_access.py</code> to match every account to its HR owner and compare termination and transfer dates with account status and role grants.</li>
+<li>For each exception, confirm the HR event and the account state in the source records, and check for any activity after the event date.</li>
+</ol>
+<h3>Exceptions</h3>
+<div class="scroll"><table class=""><thead><tr><th>Account</th><th>Current department</th><th>Roles</th><th>Detail</th><th>Result</th></tr></thead><tbody><tr><td>b.vance</td><td>Billing Operations</td><td>BILL_SETUP;ADJ_INIT</td><td>Owner terminated 2025-10-07; account active 85 days later</td><td><span class="pill high">Exception</span></td></tr><tr><td>l.radcliffe</td><td>Billing Operations</td><td>BILL_SETUP;ADJ_INIT</td><td>Owner terminated 2025-09-24; account active 98 days later</td><td><span class="pill high">Exception</span></td></tr><tr><td>s.calloway</td><td>Accounts Payable</td><td>AP_PAY</td><td>Owner terminated 2025-10-19; account active 73 days later</td><td><span class="pill high">Exception</span></td></tr><tr><td>s.kingsley</td><td>General Ledger</td><td>PAY_APPLY</td><td>Transferred from Accounts Receivable on 2025-06-12; prior-role access not removed</td><td><span class="pill high">Exception</span></td></tr><tr><td>u.garnett</td><td>Billing Supervision</td><td>BILL_SETUP;ADJ_INIT</td><td>Transferred from Billing Operations on 2025-08-23; prior-role access not removed</td><td><span class="pill high">Exception</span></td></tr></tbody></table></div>
+<p><b>Conclusion:</b> the procedure is designed to address the risk, but did not operate for 3 terminations and 2 transfers.
+One stale transfer kept billing initiation rights while the person also held approval rights, which led to self-approved adjustments (see T2).</p>
+
+<h2>T2 · Segregation of duties on billing adjustments (APD-07)</h2>
+<p><b>Objective:</b> no person can both initiate and approve the same billing adjustment, under any account they hold.<br>
+<b>Risk:</b> unauthorized or erroneous credits post to customer balances without an independent check, misstating revenue and receivables.</p>
+<h3>Procedure</h3>
+<ol class="steps">
+<li>Obtain the complete Q3–Q4 2025 adjustment log (2,410 records, $2,780,719.96) and reconcile its totals to the billing subledger.</li>
+<li>Run <code>scripts/sod_check.py</code> to flag records where initiator and approver are the same account, or two accounts owned by the same person.</li>
+<li>Inspect the application's workflow configuration to determine whether self-approval is blocked by the system.</li>
+</ol>
+<h3>Exceptions</h3>
+<div class="scroll"><table class=""><thead><tr><th>Transaction</th><th>Initiated</th><th>Amount</th><th>Initiator</th><th>Approver</th><th>Breach type</th></tr></thead><tbody><tr><td>ADJ-25-02401</td><td>2025-09-01 14:05:00</td><td>$23,450.00</td><td>u.garnett</td><td>u.garnett</td><td>Same account</td></tr><tr><td>ADJ-25-02404</td><td>2025-09-03 10:44:00</td><td>$11,200.00</td><td>m.thorne</td><td>m.thorne_adm</td><td>Same person, second account</td></tr><tr><td>ADJ-25-02402</td><td>2025-09-29 14:05:00</td><td>$4,120.50</td><td>u.garnett</td><td>u.garnett</td><td>Same account</td></tr><tr><td>ADJ-25-02405</td><td>2025-10-18 23:20:00</td><td>$9,800.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02406</td><td>2025-10-18 23:25:00</td><td>$7,450.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02407</td><td>2025-10-18 23:30:00</td><td>$9,900.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02408</td><td>2025-10-18 23:35:00</td><td>$6,200.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02409</td><td>2025-10-18 23:40:00</td><td>$8,150.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02410</td><td>2025-10-18 23:45:00</td><td>$6,800.00</td><td>c.oakes</td><td>c.oakes</td><td>Same account</td></tr><tr><td>ADJ-25-02403</td><td>2025-11-02 14:05:00</td><td>$980.00</td><td>u.garnett</td><td>u.garnett</td><td>Same account</td></tr></tbody></table></div>
+<p><b>Conclusion:</b> the application does not block self-approval, so the control relies on role design alone, and role design failed in three ways:
+a transfer that kept initiation rights, a second privileged account and an emergency grant. 10 adjustments totaling $88,050.50 were self-approved.
+Recommend a system-enforced initiator ≠ approver rule keyed to the person, not the account.</p>
+
+<h2>T3 · Privileged, emergency and non-employee access (APD-05, APD-06, APD-08)</h2>
+<p><b>Objective:</b> privileged and emergency access is approved, time-bound and reviewed, and every non-employee account has a documented owner.<br>
+<b>Risk:</b> elevated or unowned access is used outside normal approval and review.</p>
+<div class="scroll"><table class=""><thead><tr><th>Account</th><th>Exception</th><th>Roles</th><th>Detail</th></tr></thead><tbody><tr><td>c.oakes</td><td>Emergency No Expiry</td><td>ADJ_APPR</td><td>Emergency grant EA-0412 on 2025-10-17 by helpdesk.tier2 with no expiry</td></tr><tr><td>p.contractor7</td><td>Orphaned</td><td>PAY_APPLY</td><td>No matching HR record; no service-account documentation</td></tr><tr><td>temp.glsupport</td><td>Orphaned</td><td>GL_POST</td><td>No matching HR record; no service-account documentation</td></tr><tr><td>m.thorne_adm</td><td>Second Privileged</td><td>ADJ_APPR</td><td>Owner holds a standard and a privileged account; privileged account was created without an approval ticket</td></tr></tbody></table></div>
+<p><b>Conclusion:</b> emergency access has a request process but no enforced expiry or SoD check, and two non-employee accounts have no owner.
+The batch service account <code>svc_billing_batch</code> was reviewed and is documented as non-interactive, so it is not an exception.</p>
+
+<h2>Remediation tracking</h2>
+<div class="scroll"><table class=""><thead><tr><th>Finding</th><th>Action</th><th>Owner (role)</th><th>Target</th></tr></thead><tbody><tr><td>T1-F1</td><td>Disable the terminated users' accounts and review their activity after the termination date</td><td>Application owner, Billing and ERP</td><td>Immediate</td></tr><tr><td>T1-F2</td><td>Remove prior-department roles; add transfer events from the HR feed to the deprovisioning workflow</td><td>IAM operations</td><td>30 days</td></tr><tr><td>T2-F1</td><td>Enable a system-enforced initiator ≠ approver rule keyed to the HR employee ID; Finance to review the self-approved adjustments</td><td>Billing application owner; Controller</td><td>45 days</td></tr><tr><td>T3-F1</td><td>Require an expiry (max 24 hours) and an SoD check on every emergency grant; review each use afterwards</td><td>Information Security</td><td>30 days</td></tr><tr><td>T3-F2</td><td>Disable or assign owners to the two non-employee accounts; remove the unapproved second privileged account</td><td>IAM operations</td><td>Immediate</td></tr></tbody></table></div>
+
+</div></main>
+<footer class="site"><div class="wrap">
+Northwind Holdings is a fictional company. Every person, account and transaction on this site is synthetic data generated by
+<a href="https://github.com/Janaya-Hoskins/financial-systems-security/blob/main/scripts/generate_synthetic_data.py">scripts/generate_synthetic_data.py</a>. Nothing here is a record of any
+employer's systems, people or findings. · <a href="https://www.linkedin.com/in/janaya-hoskins">LinkedIn</a> · <a href="https://janaya-hoskins.github.io/iam-portfolio/">IAM &amp; Identity Governance Portfolio</a> · <a href="https://github.com/Janaya-Hoskins/financial-systems-security">Source on GitHub</a>
+</div></footer>
+</body>
+</html>

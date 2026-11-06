@@ -1,0 +1,7 @@
+ts,user_id,source,host,event,result
+2025-10-18 23:09:41,c.oakes,VPN,WS-UNREG-77,LOGIN,SUCCESS
+2025-10-18 23:12:02,c.oakes,Billing (Oracle CC&B),WS-UNREG-77,LOGIN,FAILURE
+2025-10-18 23:12:40,c.oakes,Billing (Oracle CC&B),WS-UNREG-77,LOGIN,FAILURE
+2025-10-18 23:14:05,c.oakes,Billing (Oracle CC&B),WS-UNREG-77,LOGIN,SUCCESS
+2025-10-18 23:52:30,c.oakes,Billing (Oracle CC&B),WS-UNREG-77,LOGOUT,SUCCESS
+2025-10-19 07:30:00,c.oakes,SIEM,siem-01,ALERT FIN-ADJ-07,TRIGGERED
